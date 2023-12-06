@@ -13,6 +13,9 @@
 		DC0C9EAB2B1DB6570054851C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC0C9EAA2B1DB6570054851C /* Assets.xcassets */; };
 		DC0C9EAE2B1DB6570054851C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC0C9EAC2B1DB6570054851C /* LaunchScreen.storyboard */; };
 		DC0C9EB92B1F1BE10054851C /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EB82B1F1BE10054851C /* TableViewCell.swift */; };
+		DC0C9EBB2B1F2C1E0054851C /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EBA2B1F2C1E0054851C /* TitleView.swift */; };
+		DC0C9EBE2B1F45C60054851C /* TableViewTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EBD2B1F45C60054851C /* TableViewTag.swift */; };
+		DC0C9EC12B1F4E400054851C /* Array+.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EC02B1F4E3F0054851C /* Array+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +27,9 @@
 		DC0C9EAD2B1DB6570054851C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DC0C9EAF2B1DB6570054851C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC0C9EB82B1F1BE10054851C /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		DC0C9EBA2B1F2C1E0054851C /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
+		DC0C9EBD2B1F45C60054851C /* TableViewTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewTag.swift; sourceTree = "<group>"; };
+		DC0C9EC02B1F4E3F0054851C /* Array+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +46,8 @@
 		DC0C9E952B1DB6560054851C = {
 			isa = PBXGroup;
 			children = (
+				DC0C9EBF2B1F4E350054851C /* Extension */,
+				DC0C9EBC2B1F45B80054851C /* Enum */,
 				DC0C9EB72B1DB7740054851C /* Application */,
 				DC0C9EB62B1DB74B0054851C /* View */,
 				DC0C9EB52B1DB71A0054851C /* Resource */,
@@ -78,6 +86,7 @@
 			children = (
 				DC0C9EAC2B1DB6570054851C /* LaunchScreen.storyboard */,
 				DC0C9EB82B1F1BE10054851C /* TableViewCell.swift */,
+				DC0C9EBA2B1F2C1E0054851C /* TitleView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -89,6 +98,22 @@
 				DC0C9EA32B1DB6560054851C /* SceneDelegate.swift */,
 			);
 			path = Application;
+			sourceTree = "<group>";
+		};
+		DC0C9EBC2B1F45B80054851C /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+				DC0C9EBD2B1F45C60054851C /* TableViewTag.swift */,
+			);
+			path = Enum;
+			sourceTree = "<group>";
+		};
+		DC0C9EBF2B1F4E350054851C /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				DC0C9EC02B1F4E3F0054851C /* Array+.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -165,6 +190,9 @@
 				DC0C9EB92B1F1BE10054851C /* TableViewCell.swift in Sources */,
 				DC0C9EA22B1DB6560054851C /* AppDelegate.swift in Sources */,
 				DC0C9EA42B1DB6560054851C /* SceneDelegate.swift in Sources */,
+				DC0C9EBE2B1F45C60054851C /* TableViewTag.swift in Sources */,
+				DC0C9EBB2B1F2C1E0054851C /* TitleView.swift in Sources */,
+				DC0C9EC12B1F4E400054851C /* Array+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,8 +336,8 @@
 				INFOPLIST_FILE = Resource/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -317,6 +345,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.idinaloq.ProjectManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -335,8 +366,8 @@
 				INFOPLIST_FILE = Resource/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -344,6 +375,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.idinaloq.ProjectManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

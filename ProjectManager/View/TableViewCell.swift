@@ -12,6 +12,7 @@ final class TableViewCell: UITableViewCell {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
+        label.text = "레이블 텍스트"
         
         return label
     }()
@@ -20,7 +21,7 @@ final class TableViewCell: UITableViewCell {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 3
-        
+        label.text = "레이블 바디"
         return label
     }()
     
@@ -28,7 +29,7 @@ final class TableViewCell: UITableViewCell {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 3
-        
+        label.text = "레이블 데드라인"
         return label
     }()
     
@@ -56,6 +57,16 @@ final class TableViewCell: UITableViewCell {
         return stackView
     }()
     
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        configureUI()
+        configureLayout()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private func configureUI() {
         titleStackView.addArrangedSubview(titleLabel)
         bodyStackView.addArrangedSubview(bodyLabel)
@@ -66,19 +77,24 @@ final class TableViewCell: UITableViewCell {
     }
     
     private func configureLayout() {
+        let height: CGFloat = contentView.frame.height / 3.0
+        
         NSLayoutConstraint.activate([
             titleStackView.topAnchor.constraint(equalTo: contentView.topAnchor),
             titleStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             titleStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            titleStackView.bottomAnchor.constraint(equalTo: bodyStackView.topAnchor, constant: -8),
+            titleStackView.bottomAnchor.constraint(equalTo: bodyStackView.topAnchor),
+            titleStackView.heightAnchor.constraint(equalToConstant: height),
             
             bodyStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             bodyStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            bodyStackView.bottomAnchor.constraint(equalTo: deadLineStackView.topAnchor, constant: -8),
+            bodyStackView.bottomAnchor.constraint(equalTo: deadLineStackView.topAnchor),
+            bodyStackView.heightAnchor.constraint(equalToConstant: height),
             
             deadLineStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             deadLineStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            deadLineStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            deadLineStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            deadLineStackView.heightAnchor.constraint(equalToConstant: height)
         ])
     }
 }
