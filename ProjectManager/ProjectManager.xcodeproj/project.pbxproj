@@ -16,6 +16,7 @@
 		DC0C9EBB2B1F2C1E0054851C /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EBA2B1F2C1E0054851C /* TitleView.swift */; };
 		DC0C9EBE2B1F45C60054851C /* TableViewTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EBD2B1F45C60054851C /* TableViewTag.swift */; };
 		DC0C9EC12B1F4E400054851C /* Array+.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EC02B1F4E3F0054851C /* Array+.swift */; };
+		DC0C9EC32B206EB10054851C /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EC22B206EB10054851C /* EditViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		DC0C9EBA2B1F2C1E0054851C /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		DC0C9EBD2B1F45C60054851C /* TableViewTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewTag.swift; sourceTree = "<group>"; };
 		DC0C9EC02B1F4E3F0054851C /* Array+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+.swift"; sourceTree = "<group>"; };
+		DC0C9EC22B206EB10054851C /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +53,7 @@
 				DC0C9EB72B1DB7740054851C /* Application */,
 				DC0C9EB62B1DB74B0054851C /* View */,
 				DC0C9EB52B1DB71A0054851C /* Resource */,
-				DC0C9EA02B1DB6560054851C /* ProjectManager */,
+				DC0C9EA02B1DB6560054851C /* ViewController */,
 				DC0C9E9F2B1DB6560054851C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -64,12 +66,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DC0C9EA02B1DB6560054851C /* ProjectManager */ = {
+		DC0C9EA02B1DB6560054851C /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
 				DC0C9EA52B1DB6560054851C /* RootViewController.swift */,
+				DC0C9EC22B206EB10054851C /* EditViewController.swift */,
 			);
-			path = ProjectManager;
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		DC0C9EB52B1DB71A0054851C /* Resource */ = {
@@ -186,6 +189,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC0C9EC32B206EB10054851C /* EditViewController.swift in Sources */,
 				DC0C9EA62B1DB6560054851C /* RootViewController.swift in Sources */,
 				DC0C9EB92B1F1BE10054851C /* TableViewCell.swift in Sources */,
 				DC0C9EA22B1DB6560054851C /* AppDelegate.swift in Sources */,
