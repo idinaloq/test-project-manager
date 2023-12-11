@@ -17,6 +17,7 @@
 		DC0C9EBE2B1F45C60054851C /* TableViewTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EBD2B1F45C60054851C /* TableViewTag.swift */; };
 		DC0C9EC12B1F4E400054851C /* Array+.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EC02B1F4E3F0054851C /* Array+.swift */; };
 		DC0C9EC32B206EB10054851C /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EC22B206EB10054851C /* EditViewController.swift */; };
+		DC0C9EC62B27232B0054851C /* TextData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0C9EC52B27232B0054851C /* TextData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		DC0C9EBD2B1F45C60054851C /* TableViewTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewTag.swift; sourceTree = "<group>"; };
 		DC0C9EC02B1F4E3F0054851C /* Array+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+.swift"; sourceTree = "<group>"; };
 		DC0C9EC22B206EB10054851C /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		DC0C9EC52B27232B0054851C /* TextData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 				DC0C9EBF2B1F4E350054851C /* Extension */,
 				DC0C9EBC2B1F45B80054851C /* Enum */,
 				DC0C9EB72B1DB7740054851C /* Application */,
+				DC0C9EC42B2722C20054851C /* Model */,
 				DC0C9EB62B1DB74B0054851C /* View */,
 				DC0C9EB52B1DB71A0054851C /* Resource */,
 				DC0C9EA02B1DB6560054851C /* ViewController */,
@@ -117,6 +120,14 @@
 				DC0C9EC02B1F4E3F0054851C /* Array+.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		DC0C9EC42B2722C20054851C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DC0C9EC52B27232B0054851C /* TextData.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -191,6 +202,7 @@
 			files = (
 				DC0C9EC32B206EB10054851C /* EditViewController.swift in Sources */,
 				DC0C9EA62B1DB6560054851C /* RootViewController.swift in Sources */,
+				DC0C9EC62B27232B0054851C /* TextData.swift in Sources */,
 				DC0C9EB92B1F1BE10054851C /* TableViewCell.swift in Sources */,
 				DC0C9EA22B1DB6560054851C /* AppDelegate.swift in Sources */,
 				DC0C9EA42B1DB6560054851C /* SceneDelegate.swift in Sources */,

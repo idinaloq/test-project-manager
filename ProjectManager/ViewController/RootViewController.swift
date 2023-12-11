@@ -8,6 +8,10 @@
 import UIKit
 
 class RootViewController: UIViewController {
+    private var todoData: [TextData] = []
+    private var doingData: [TextData] = []
+    private var doneData: [TextData] = []
+    
     private let todoTitleView: UIView = {
         let titleView: TitleView = TitleView()
         titleView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,6 +77,10 @@ class RootViewController: UIViewController {
     }
     
     @objc private func touchUpPlusButton() {
+        let editViewController: EditViewController = EditViewController()
+        editViewController.modalPresentationStyle = .formSheet
+        let navigationController: UINavigationController = UINavigationController(rootViewController: editViewController)
+        present(navigationController, animated: true, completion: nil)
         
     }
     
@@ -135,10 +143,32 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        return UITableViewCell()
+        return createCell(tableView: tableView, indexPath: indexPath)
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
     
+    func createCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        var identifier: String
+        
+        switch tableView.tag {
+        case TableViewTag.todo.tag:
+            identifier = TableViewTag.todo.description
+        case TableViewTag.doing.tag:
+            identifier = TableViewTag.doing.description
+        case TableViewTag.done.tag:
+            identifier = TableViewTag.done.description
+        default:
+            return TableViewCell()
+        }
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? TableViewCell else {
+            return TableViewCell()
+        }
+
+        return cell
+    }
 }
 

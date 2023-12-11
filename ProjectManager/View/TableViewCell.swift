@@ -77,24 +77,21 @@ final class TableViewCell: UITableViewCell {
     }
     
     private func configureLayout() {
-        let height: CGFloat = contentView.frame.height / 3.0
+//        let height: CGFloat = contentView.frame.height / 3.0
         
         NSLayoutConstraint.activate([
             titleStackView.topAnchor.constraint(equalTo: contentView.topAnchor),
             titleStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             titleStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             titleStackView.bottomAnchor.constraint(equalTo: bodyStackView.topAnchor),
-            titleStackView.heightAnchor.constraint(equalToConstant: height),
             
             bodyStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             bodyStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             bodyStackView.bottomAnchor.constraint(equalTo: deadLineStackView.topAnchor),
-            bodyStackView.heightAnchor.constraint(equalToConstant: height),
             
             deadLineStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             deadLineStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             deadLineStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            deadLineStackView.heightAnchor.constraint(equalToConstant: height)
         ])
     }
 }
