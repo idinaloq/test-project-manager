@@ -43,6 +43,7 @@ class RootViewController: UIViewController {
         let tableView: UITableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewTag.todo.description)
+        tableView.tag = TableViewTag.todo.tag
         
         return tableView
     }()
@@ -51,6 +52,7 @@ class RootViewController: UIViewController {
         let tableView: UITableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewTag.doing.description)
+        tableView.tag = TableViewTag.doing.tag
         
         return tableView
     }()
@@ -59,6 +61,7 @@ class RootViewController: UIViewController {
         let tableView: UITableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewTag.done.description)
+        tableView.tag = TableViewTag.done.tag
         
         return tableView
     }()
@@ -77,8 +80,9 @@ class RootViewController: UIViewController {
     }
     
     @objc private func touchUpPlusButton() {
-        let editViewController: EditViewController = EditViewController(textData: TextData(), writeMode: .add, tableViewTag: .todo)
+        let editViewController: EditViewController = EditViewController(textData: TextData(), writeMode: .add, tableViewTag: .todo, indexPath: nil)
         editViewController.modalPresentationStyle = .formSheet
+        editViewController.delegate = self
         let navigationController: UINavigationController = UINavigationController(rootViewController: editViewController)
         present(navigationController, animated: true, completion: nil)
     }
@@ -158,22 +162,27 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
     
     func createCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         var identifier: String
+        var data: TextData?
         
         switch tableView.tag {
         case TableViewTag.todo.tag:
             identifier = TableViewTag.todo.description
+            data = todoData[safe: indexPath.item]
         case TableViewTag.doing.tag:
             identifier = TableViewTag.doing.description
+            data = doingData[safe: indexPath.item]
         case TableViewTag.done.tag:
             identifier = TableViewTag.done.description
+            data = doneData[safe: indexPath.item]
         default:
             return TableViewCell()
         }
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? TableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? TableViewCell,
+        let data = data else {
             return TableViewCell()
         }
-
+        cell.configureLabel(textData: data)
         return cell
     }
 }
@@ -204,8 +213,5 @@ extension RootViewController: EditViewControllerDelegate {
                 doneTableView.reloadRows(at: [indexPath], with: .automatic)
             }
         }
-
-        todoData.append(textData)
-        todoTableView.reloadData()
     }
 }
