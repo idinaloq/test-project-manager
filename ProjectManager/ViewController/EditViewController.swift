@@ -79,7 +79,7 @@ final class EditViewController: UIViewController {
     }
     
     @objc private func selectDatePicker() {
-        
+        textData.deadline = datePicker.date
     }
     
     private func configureNavigation() {
