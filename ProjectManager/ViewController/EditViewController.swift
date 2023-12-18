@@ -10,21 +10,35 @@ import UIKit
 
 final class EditViewController: UIViewController {
     private let datePicker: UIDatePicker = UIDatePicker()
+    private var textData: TextData
     
     private let titleTextField: UITextField = {
         let textField: UITextField = UITextField()
         textField.placeholder = "Title"
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.backgroundColor = .red
+        textField.font = .systemFont(ofSize: 16)
+        textField.borderStyle = .roundedRect
+        
         return textField
     }()
     
     private let bodyTextView: UITextView = {
         let textView: UITextView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.backgroundColor = .green
+        textView.font = .systemFont(ofSize: 32)
+        textView.layer.borderWidth = 1.0
+        
         return textView
     }()
+    
+    init(textData: TextData) {
+        self.textData = textData
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +46,6 @@ final class EditViewController: UIViewController {
         configureNavigation()
         configureDatePicker()
         configureLayout()
-        
     }
     
     private func configureUI() {
@@ -40,8 +53,6 @@ final class EditViewController: UIViewController {
         view.addSubview(titleTextField)
         view.addSubview(datePicker)
         view.addSubview(bodyTextView)
-        
-        
     }
     
     private func configureDatePicker() {
@@ -51,7 +62,7 @@ final class EditViewController: UIViewController {
         datePicker.timeZone = .autoupdatingCurrent
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         datePicker.addTarget(self, action: #selector(selectDatePicker), for: .allEvents)
-        datePicker.backgroundColor = .blue
+
     }
     
     @objc private func selectDatePicker() {
@@ -63,7 +74,7 @@ final class EditViewController: UIViewController {
         navigationItem.rightBarButtonItem = doneButton
         navigationItem.title = "타이틀" //해당부분 TODO, DOING, DONE으로 변경이 가능해야 함
     }
-    
+
     private func configureLayout() {
         NSLayoutConstraint.activate([
             titleTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
