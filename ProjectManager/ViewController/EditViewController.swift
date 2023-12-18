@@ -12,6 +12,7 @@ final class EditViewController: UIViewController {
     private let datePicker: UIDatePicker = UIDatePicker()
     private var textData: TextData?
     private let writeMode: WriteMode
+    var delegate: EditViewController?
     
     private let titleTextField: UITextField = {
         let textField: UITextField = UITextField()
@@ -77,7 +78,7 @@ final class EditViewController: UIViewController {
         
         switch writeMode {
         case .edit:
-            let cancelButton: UIBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(touchUpCancelButton))
+            let cancelButton: UIBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(touchUpEditButton))
             navigationItem.leftBarButtonItem = cancelButton
         case .add:
             let addButton: UIBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(touchUpCancelButton))
@@ -94,10 +95,8 @@ final class EditViewController: UIViewController {
     }
     
     @objc private func touchUpCancelButton() {
-        
+        dismiss(animated: true)
     }
-    
-
 
     private func configureLayout() {
         NSLayoutConstraint.activate([
@@ -111,12 +110,24 @@ final class EditViewController: UIViewController {
             datePicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8),
             datePicker.bottomAnchor.constraint(equalTo: bodyTextView.topAnchor, constant: -8),
             
-            
             bodyTextView.heightAnchor.constraint(equalToConstant: 300),
             bodyTextView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8),
             bodyTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8),
             bodyTextView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8)
         ])
     }
+}
 
+extension EditViewController: UITextFieldDelegate, UITextViewDelegate {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        textData?.title = textField.text
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        textData?.body = textView.text
+    }
+}
+
+protocol EditViewControllerDelegate: AnyObject {
+    func saveTextData(textData: TextData)
 }
