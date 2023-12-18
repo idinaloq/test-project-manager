@@ -12,7 +12,7 @@ final class EditViewController: UIViewController {
     private let datePicker: UIDatePicker = UIDatePicker()
     private var textData: TextData
     private let writeMode: WriteMode
-    private let tableViewTag: TableViewTag
+    private let tableViewTag: Int
     private let indexPath: IndexPath?
     var delegate: EditViewControllerDelegate?
     
@@ -35,7 +35,7 @@ final class EditViewController: UIViewController {
         return textView
     }()
     
-    init(textData: TextData, writeMode: WriteMode, tableViewTag: TableViewTag, indexPath: IndexPath?) {
+    init(textData: TextData, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?) {
         self.textData = textData
         self.writeMode = writeMode
         self.tableViewTag = tableViewTag
@@ -139,5 +139,5 @@ extension EditViewController: UITextFieldDelegate, UITextViewDelegate {
 }
 
 protocol EditViewControllerDelegate: AnyObject {
-    func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: TableViewTag, indexPath: IndexPath?)
+    func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?)
 }
