@@ -14,7 +14,7 @@ final class EditViewController: UIViewController {
     private let writeMode: WriteMode
     private let tableViewTag: TableViewTag
     private let indexPath: IndexPath?
-    var delegate: EditViewController?
+    var delegate: EditViewControllerDelegate?
     
     private let titleTextField: UITextField = {
         let textField: UITextField = UITextField()
@@ -98,7 +98,11 @@ final class EditViewController: UIViewController {
     }
     
     @objc private func touchUpDoneButton() {
-        
+        if textData.deadline == nil {
+            textData.deadline = Date()
+        }
+        delegate?.updateCell(textData: textData, writeMode: writeMode, tableViewTag: tableViewTag, indexPath: indexPath)
+        dismiss(animated: true)
     }
     
     @objc private func touchUpEditButton() {
@@ -107,7 +111,6 @@ final class EditViewController: UIViewController {
     
     @objc private func touchUpCancelButton() {
         dismiss(animated: true)
-        print(textData)
     }
 
     private func configureLayout() {
