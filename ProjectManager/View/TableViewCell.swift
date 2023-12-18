@@ -93,7 +93,13 @@ final class TableViewCell: UITableViewCell {
         ])
     }
     
-    override func layoutIfNeeded() {
+    func configureLabel(textData: TextData) {
+        titleLabel.text = textData.title
+        bodyLabel.text = textData.body
+        deadLineLabel.text = "\(textData.deadline)"
+    }
+    
+    override func prepareForReuse() {
         titleLabel.text = ""
         bodyLabel.text = ""
         deadLineLabel.text = ""
