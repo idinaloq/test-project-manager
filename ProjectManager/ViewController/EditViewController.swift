@@ -33,16 +33,16 @@ final class EditViewController: UIViewController {
         return textView
     }()
     
-//    init(textData: TextData, writeMode: WriteMode) {
-//        self.textData = textData
-//        self.writeMode = writeMode
-//        super.init(nibName: nil, bundle: nil)
-//    }
-    
-    init(writeMode: WriteMode) {
+    init(textData: TextData, writeMode: WriteMode) {
+        self.textData = textData
         self.writeMode = writeMode
         super.init(nibName: nil, bundle: nil)
     }
+    
+//    init(writeMode: WriteMode) {
+//        self.writeMode = writeMode
+//        super.init(nibName: nil, bundle: nil)
+//    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -129,13 +129,11 @@ final class EditViewController: UIViewController {
 extension EditViewController: UITextFieldDelegate, UITextViewDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         textData.title = textField.text
-        print("타이틀입력됨")
         print(textData.title as Any)
     }
     
     func textViewDidChange(_ textView: UITextView) {
         textData.body = textView.text
-        print("바디입력됨")
         print(textData.body as Any)
     }
 }
