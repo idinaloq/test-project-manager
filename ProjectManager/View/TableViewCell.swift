@@ -12,7 +12,7 @@ final class TableViewCell: UITableViewCell {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
-        label.text = "레이블 텍스트"
+        label.text = ""
         
         return label
     }()
@@ -21,7 +21,7 @@ final class TableViewCell: UITableViewCell {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 3
-        label.text = "레이블 바디"
+        label.text = ""
         return label
     }()
     
@@ -29,7 +29,7 @@ final class TableViewCell: UITableViewCell {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 3
-        label.text = "레이블 데드라인"
+        label.text = ""
         return label
     }()
     
@@ -77,8 +77,6 @@ final class TableViewCell: UITableViewCell {
     }
     
     private func configureLayout() {
-//        let height: CGFloat = contentView.frame.height / 3.0
-        
         NSLayoutConstraint.activate([
             titleStackView.topAnchor.constraint(equalTo: contentView.topAnchor),
             titleStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -93,5 +91,11 @@ final class TableViewCell: UITableViewCell {
             deadLineStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             deadLineStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
+    }
+    
+    override func layoutIfNeeded() {
+        titleLabel.text = ""
+        bodyLabel.text = ""
+        deadLineLabel.text = ""
     }
 }
