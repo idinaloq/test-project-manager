@@ -65,7 +65,7 @@ class RootViewController: UIViewController {
         
         return tableView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNatigation()
@@ -179,13 +179,139 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? TableViewCell,
-        let data = data else {
+              let data = data else {
             return TableViewCell()
         }
+        
+        let longTappedCell = UILongPressGestureRecognizer(target: self, action: #selector(longTappedCell))
         cell.configureLabel(textData: data)
+        cell.addGestureRecognizer(longTappedCell)
+        
         return cell
     }
+    
+    @objc private func longTappedCell(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        guard let cell = gestureRecognizer.view as? UITableViewCell,
+              let tableView = cell.superview as? UITableView else {
+            return
+        }
+        
+        let alertController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let moveToToDo: UIAlertAction = UIAlertAction(title: "move to todo", style: .default) { [weak self] _ in
+            if tableView.tag == TableViewTag.doing.tag { // doing -> todo
+                guard let indexPath = self?.doingTableView.indexPath(for: cell),
+                      let doingData = self?.doingData[safe: indexPath.row],
+                      let todoDataCount = self?.todoData.count else {
+                    return
+                }
+                
+                self?.todoData.append(doingData)
+                self?.doingData.remove(at: indexPath.row)
+                self?.doingTableView.deleteRows(at: [indexPath], with: .automatic)
+                let index = IndexPath(row: todoDataCount, section: 0)
+                self?.todoTableView.insertRows(at: [index], with: .automatic)
+            }
+            
+            if tableView.tag == TableViewTag.done.tag { // done -> todo
+                guard let indexPath = self?.doneTableView.indexPath(for: cell),
+                      let doneData = self?.doneData[safe: indexPath.row],
+                      let todoDataCount = self?.todoData.count else {
+                    return
+                }
+                
+                self?.todoData.append(doneData)
+                self?.doneData.remove(at: indexPath.row)
+                self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
+                let index = IndexPath(row: todoDataCount, section: 0)
+                self?.todoTableView.insertRows(at: [index], with: .automatic)
+            }
+        }
+        
+        let moveToDoing: UIAlertAction = UIAlertAction(title: "move to doing", style: .default) { [weak self] _ in
+            if tableView.tag == TableViewTag.todo.tag { // todo -> doing
+                guard let indexPath = self?.todoTableView.indexPath(for: cell),
+                      let todoData = self?.todoData[safe: indexPath.row],
+                      let doingDataCount = self?.doingData.count else {
+                    return
+                }
+                
+                self?.doingData.append(todoData)
+                self?.todoData.remove(at: indexPath.row)
+                self?.todoTableView.deleteRows(at: [indexPath], with: .automatic)
+                let index = IndexPath(row: doingDataCount, section: 0)
+                self?.doingTableView.insertRows(at: [index], with: .automatic)
+            }
+            
+            if tableView.tag == TableViewTag.done.tag { // done -> doing
+                guard let indexPath = self?.doneTableView.indexPath(for: cell),
+                      let doneData = self?.doneData[safe: indexPath.row],
+                      let doingDataCount = self?.doingData.count else {
+                    return
+                }
+                
+                self?.doingData.append(doneData)
+                self?.doneData.remove(at: indexPath.row)
+                self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
+                let index = IndexPath(row: doingDataCount, section: 0)
+                self?.doingTableView.insertRows(at: [index], with: .automatic)
+            }
+        }
+        
+        let moveToDone: UIAlertAction = UIAlertAction(title: "move to done", style: .default) { [weak self] _ in
+            if tableView.tag == TableViewTag.todo.tag { // todo -> done
+                guard let indexPath = self?.todoTableView.indexPath(for: cell),
+                      let todoData = self?.todoData[safe: indexPath.row],
+                      let doneDataCount = self?.doneData.count else {
+                    return
+                }
+                
+                self?.doneData.append(todoData)
+                self?.todoData.remove(at: indexPath.row)
+                self?.todoTableView.deleteRows(at: [indexPath], with: .automatic)
+                let index = IndexPath(row: doneDataCount, section: 0)
+                self?.doneTableView.insertRows(at: [index], with: .automatic)
+            }
+            
+            if tableView.tag == TableViewTag.doing.tag { // doing -> done
+                guard let indexPath = self?.doingTableView.indexPath(for: cell),
+                      let doingData = self?.doingData[safe: indexPath.row],
+                      let doneDataCount = self?.doneData.count else {
+                    return
+                }
+                
+                self?.doneData.append(doingData)
+                self?.doingData.remove(at: indexPath.row)
+                self?.doingTableView.deleteRows(at: [indexPath], with: .automatic)
+                let index = IndexPath(row: doneDataCount, section: 0)
+                self?.doneTableView.insertRows(at: [index], with: .automatic)
+            }
+        }
+        
+        switch tableView.tag {
+        case TableViewTag.todo.tag:
+            alertController.addAction(moveToDoing)
+            alertController.addAction(moveToDone)
+        case TableViewTag.doing.tag:
+            alertController.addAction(moveToToDo)
+            alertController.addAction(moveToDone)
+        case TableViewTag.done.tag:
+            alertController.addAction(moveToToDo)
+            alertController.addAction(moveToDoing)
+        default:
+            print("alertController Error")
+        }
+        
+        if let popOverController = alertController.popoverPresentationController {
+            popOverController.sourceView = view
+            popOverController.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.maxY, width: 0, height: 0)
+            popOverController.permittedArrowDirections = []
+        }
+        
+        present(alertController, animated: true)
+        
+    }
 }
+
 
 extension RootViewController: EditViewControllerDelegate {
     func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: TableViewTag, indexPath: IndexPath?) {
