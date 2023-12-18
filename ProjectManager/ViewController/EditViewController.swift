@@ -53,6 +53,7 @@ final class EditViewController: UIViewController {
         configureNavigation()
         configureDatePicker()
         configureLayout()
+        configureTextData()
     }
     
     private func configureUI() {
@@ -62,6 +63,15 @@ final class EditViewController: UIViewController {
         view.addSubview(titleTextField)
         view.addSubview(datePicker)
         view.addSubview(bodyTextView)
+    }
+    
+    private func configureTextData() {
+        titleTextField.text = textData.title
+        bodyTextView.text = textData.body
+        guard let date = textData.deadline else {
+            return
+        }
+        datePicker.date = date
     }
     
     private func configureDatePicker() {
