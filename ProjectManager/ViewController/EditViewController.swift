@@ -131,12 +131,10 @@ final class EditViewController: UIViewController {
 extension EditViewController: UITextFieldDelegate, UITextViewDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         textData.title = textField.text
-        print(textData.title as Any)
     }
     
     func textViewDidChange(_ textView: UITextView) {
         textData.body = textView.text
-        print(textData.body as Any)
     }
 }
 
