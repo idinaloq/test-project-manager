@@ -77,11 +77,10 @@ class RootViewController: UIViewController {
     }
     
     @objc private func touchUpPlusButton() {
-        let editViewController: EditViewController = EditViewController(textData: TextData() ,writeMode: .add)
+        let editViewController: EditViewController = EditViewController(textData: TextData(), writeMode: .add, tableViewTag: .todo)
         editViewController.modalPresentationStyle = .formSheet
         let navigationController: UINavigationController = UINavigationController(rootViewController: editViewController)
         present(navigationController, animated: true, completion: nil)
-        
     }
     
     private func configureUI() {
@@ -133,8 +132,6 @@ class RootViewController: UIViewController {
             doneTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-    
-
 }
 
 extension RootViewController: UITableViewDataSource, UITableViewDelegate {
@@ -183,7 +180,7 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
 
 //넘겨받은 데이터로 TODO, DOING, DONE의 TableView 리로드와 TextData배열에 추가 필요함
 extension RootViewController: EditViewControllerDelegate {
-    func getData(textData: TextData) {
+    func getData(textData: TextData, writeMode: WriteMode, tableViewTag: TableViewTag) {
         todoData.append(textData)
         todoTableView.reloadData()
     }
