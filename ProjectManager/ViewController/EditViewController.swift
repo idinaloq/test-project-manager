@@ -129,5 +129,5 @@ extension EditViewController: UITextFieldDelegate, UITextViewDelegate {
 }
 
 protocol EditViewControllerDelegate: AnyObject {
-    func saveTextData(textData: TextData)
+    func getData(textData: TextData)
 }
