@@ -187,7 +187,6 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-//넘겨받은 데이터로 TODO, DOING, DONE의 TableView 리로드와 TextData배열에 추가 필요함
 extension RootViewController: EditViewControllerDelegate {
     func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: TableViewTag, indexPath: IndexPath?) {
         
