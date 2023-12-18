@@ -13,6 +13,7 @@ final class EditViewController: UIViewController {
     private var textData: TextData
     private let writeMode: WriteMode
     private let tableViewTag: TableViewTag
+    private let indexPath: IndexPath?
     var delegate: EditViewController?
     
     private let titleTextField: UITextField = {
@@ -34,10 +35,11 @@ final class EditViewController: UIViewController {
         return textView
     }()
     
-    init(textData: TextData, writeMode: WriteMode, tableViewTag: TableViewTag) {
+    init(textData: TextData, writeMode: WriteMode, tableViewTag: TableViewTag, indexPath: IndexPath?) {
         self.textData = textData
         self.writeMode = writeMode
         self.tableViewTag = tableViewTag
+        self.indexPath = indexPath
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -141,5 +143,5 @@ extension EditViewController: UITextFieldDelegate, UITextViewDelegate {
 }
 
 protocol EditViewControllerDelegate: AnyObject {
-    func getData(textData: TextData, writeMode: WriteMode, tableViewTag: TableViewTag)
+    func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: TableViewTag, indexPath: IndexPath?)
 }
