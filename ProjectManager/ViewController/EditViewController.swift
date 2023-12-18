@@ -10,7 +10,8 @@ import UIKit
 
 final class EditViewController: UIViewController {
     private let datePicker: UIDatePicker = UIDatePicker()
-    private var textData: TextData
+    private var textData: TextData?
+    private let writeMode: WriteMode
     
     private let titleTextField: UITextField = {
         let textField: UITextField = UITextField()
@@ -31,8 +32,9 @@ final class EditViewController: UIViewController {
         return textView
     }()
     
-    init(textData: TextData) {
+    init(textData: TextData?, writeMode: WriteMode) {
         self.textData = textData
+        self.writeMode = writeMode
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -62,7 +64,6 @@ final class EditViewController: UIViewController {
         datePicker.timeZone = .autoupdatingCurrent
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         datePicker.addTarget(self, action: #selector(selectDatePicker), for: .allEvents)
-
     }
     
     @objc private func selectDatePicker() {
@@ -70,10 +71,33 @@ final class EditViewController: UIViewController {
     }
     
     private func configureNavigation() {
-        let doneButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action:#selector( touchUpDoneButton))
+        let doneButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(touchUpDoneButton))
         navigationItem.rightBarButtonItem = doneButton
         navigationItem.title = "타이틀" //해당부분 TODO, DOING, DONE으로 변경이 가능해야 함
+        
+        switch writeMode {
+        case .edit:
+            let cancelButton: UIBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(touchUpCancelButton))
+            navigationItem.leftBarButtonItem = cancelButton
+        case .add:
+            let addButton: UIBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(touchUpCancelButton))
+            navigationItem.leftBarButtonItem = addButton
+        }
     }
+    
+    @objc private func touchUpDoneButton() {
+        
+    }
+    
+    @objc private func touchUpEditButton() {
+        
+    }
+    
+    @objc private func touchUpCancelButton() {
+        
+    }
+    
+
 
     private func configureLayout() {
         NSLayoutConstraint.activate([
@@ -94,16 +118,5 @@ final class EditViewController: UIViewController {
             bodyTextView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8)
         ])
     }
-    
-    @objc private func touchUpEditButton() {
-        
-    }
-    
-    @objc private func touchUpCancelButton() {
-        
-    }
-    
-    @objc private func touchUpDoneButton() {
-        
-    }
+
 }
