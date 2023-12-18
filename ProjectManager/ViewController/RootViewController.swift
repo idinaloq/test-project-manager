@@ -80,7 +80,7 @@ class RootViewController: UIViewController {
     }
     
     @objc private func touchUpPlusButton() {
-        let editViewController: EditViewController = EditViewController(textData: TextData(), writeMode: .add, tableViewTag: .todo, indexPath: nil)
+        let editViewController: EditViewController = EditViewController(textData: TextData(), writeMode: .add, tableViewTag: TableViewTag.todo.tag, indexPath: nil)
         editViewController.modalPresentationStyle = .formSheet
         editViewController.delegate = self
         let navigationController: UINavigationController = UINavigationController(rootViewController: editViewController)
@@ -157,10 +157,30 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var textData: TextData?
+        switch tableView.tag {
+        case TableViewTag.todo.tag:
+            textData = todoData[safe: indexPath.row]
+        case TableViewTag.doing.tag:
+            textData = doingData[safe: indexPath.row]
+        case TableViewTag.done.tag:
+            textData = doneData[safe: indexPath.row]
+        default:
+            print("textData error")
+            return
+        }
         
+        guard let textData = textData else {
+            return
+        }
         
-        
+        let editViewController: EditViewController = EditViewController(textData: textData, writeMode: .edit, tableViewTag: tableView.tag, indexPath: indexPath)
+        editViewController.modalPresentationStyle = .formSheet
+        editViewController.delegate = self
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        let navigationController: UINavigationController = UINavigationController(rootViewController: editViewController)
+        present(navigationController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -336,7 +356,7 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension RootViewController: EditViewControllerDelegate {
-    func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: TableViewTag, indexPath: IndexPath?) {
+    func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?) {
         
         switch writeMode {
         case .add:
@@ -349,15 +369,18 @@ extension RootViewController: EditViewControllerDelegate {
             }
             
             switch tableViewTag {
-            case .todo:
+            case TableViewTag.todo.tag:
                 todoData[indexPath.row] = textData
                 todoTableView.reloadRows(at: [indexPath], with: .automatic)
-            case .doing:
+            case TableViewTag.doing.tag:
                 doingData[indexPath.row] = textData
                 doingTableView.reloadRows(at: [indexPath], with: .automatic)
-            case .done:
+            case TableViewTag.done.tag:
                 doneData[indexPath.row] = textData
                 doneTableView.reloadRows(at: [indexPath], with: .automatic)
+            default:
+                print("delegate tag error")
+                return
             }
         }
     }
