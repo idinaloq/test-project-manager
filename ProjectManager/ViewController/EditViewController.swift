@@ -10,7 +10,7 @@ import UIKit
 
 final class EditViewController: UIViewController {
     private let datePicker: UIDatePicker = UIDatePicker()
-    private var textData: TextData?
+    private var textData: TextData = TextData()
     private let writeMode: WriteMode
     var delegate: EditViewController?
     
@@ -18,7 +18,7 @@ final class EditViewController: UIViewController {
         let textField: UITextField = UITextField()
         textField.placeholder = "Title"
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.font = .systemFont(ofSize: 16)
+        textField.font = .systemFont(ofSize: 24)
         textField.borderStyle = .roundedRect
         
         return textField
@@ -33,8 +33,13 @@ final class EditViewController: UIViewController {
         return textView
     }()
     
-    init(textData: TextData?, writeMode: WriteMode) {
-        self.textData = textData
+//    init(textData: TextData, writeMode: WriteMode) {
+//        self.textData = textData
+//        self.writeMode = writeMode
+//        super.init(nibName: nil, bundle: nil)
+//    }
+    
+    init(writeMode: WriteMode) {
         self.writeMode = writeMode
         super.init(nibName: nil, bundle: nil)
     }
@@ -53,6 +58,8 @@ final class EditViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .systemBackground
+        bodyTextView.delegate = self
+        titleTextField.delegate = self
         view.addSubview(titleTextField)
         view.addSubview(datePicker)
         view.addSubview(bodyTextView)
@@ -96,6 +103,7 @@ final class EditViewController: UIViewController {
     
     @objc private func touchUpCancelButton() {
         dismiss(animated: true)
+        print(textData)
     }
 
     private func configureLayout() {
@@ -120,11 +128,15 @@ final class EditViewController: UIViewController {
 
 extension EditViewController: UITextFieldDelegate, UITextViewDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        textData?.title = textField.text
+        textData.title = textField.text
+        print("타이틀입력됨")
+        print(textData.title as Any)
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        textData?.body = textView.text
+        textData.body = textView.text
+        print("바디입력됨")
+        print(textData.body as Any)
     }
 }
 
