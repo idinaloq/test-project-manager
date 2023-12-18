@@ -94,9 +94,16 @@ final class TableViewCell: UITableViewCell {
     }
     
     func configureLabel(textData: TextData) {
+        guard let deadline = textData.deadline else {
+            return
+        }
+        
+        let isDeadlineOver: Bool = Date().checkDeadlineIsOver(at: deadline)
+        deadLineLabel.text = Date().convertString(date: deadline)
+        deadLineLabel.textColor = isDeadlineOver ? .red : .black
         titleLabel.text = textData.title
         bodyLabel.text = textData.body
-        deadLineLabel.text = "\(textData.deadline)"
+        
     }
     
     override func prepareForReuse() {
