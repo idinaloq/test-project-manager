@@ -157,7 +157,30 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        
+        
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete", handler: { [weak self] (action, view, completionHandler) in
+            switch tableView.tag {
+            case TableViewTag.todo.tag:
+                self?.todoData.remove(at: indexPath.row)
+                self?.todoTableView.deleteRows(at: [indexPath], with: .automatic)
+            case TableViewTag.doing.tag:
+                self?.doingData.remove(at: indexPath.row)
+                self?.doingTableView.deleteRows(at: [indexPath], with: .automatic)
+            case TableViewTag.done.tag:
+                self?.doneData.remove(at: indexPath.row)
+                self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
+            default:
+                print("swipe error")
+            }
+            
+        })
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
     
     func createCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
@@ -298,7 +321,7 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
             alertController.addAction(moveToToDo)
             alertController.addAction(moveToDoing)
         default:
-            print("alertController Error")
+            print("alertController error")
         }
         
         if let popOverController = alertController.popoverPresentationController {
@@ -311,7 +334,6 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         
     }
 }
-
 
 extension RootViewController: EditViewControllerDelegate {
     func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: TableViewTag, indexPath: IndexPath?) {
