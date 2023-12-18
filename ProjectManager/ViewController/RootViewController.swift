@@ -149,8 +149,6 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         default:
             return 0
         }
-        
-        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
