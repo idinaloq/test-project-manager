@@ -103,10 +103,10 @@ final class TableViewCell: UITableViewCell {
         deadLineLabel.textColor = isDeadlineOver ? .red : .black
         titleLabel.text = textData.title
         bodyLabel.text = textData.body
-        
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
         titleLabel.text = ""
         bodyLabel.text = ""
         deadLineLabel.text = ""
