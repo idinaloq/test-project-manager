@@ -92,7 +92,16 @@ final class EditViewController: UIViewController {
     private func configureNavigation() {
         let doneButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(touchUpDoneButton))
         navigationItem.rightBarButtonItem = doneButton
-        navigationItem.title = "타이틀" //해당부분 TODO, DOING, DONE으로 변경이 가능해야 함
+        switch tableViewTag {
+        case TableViewTag.todo.tag:
+            navigationItem.title = "TODO"
+        case TableViewTag.doing.tag:
+            navigationItem.title = "DOING"
+        case TableViewTag.done.tag:
+            navigationItem.title = "DONE"
+        default:
+            navigationItem.title = "navigation title error"
+        }
         
         switch writeMode {
         case .edit:
@@ -108,6 +117,7 @@ final class EditViewController: UIViewController {
         if textData.deadline == nil {
             textData.deadline = Date()
         }
+
         delegate?.updateCell(textData: textData, writeMode: writeMode, tableViewTag: tableViewTag, indexPath: indexPath)
         dismiss(animated: true)
     }
@@ -180,3 +190,5 @@ extension EditViewController: UITextFieldDelegate, UITextViewDelegate {
 protocol EditViewControllerDelegate: AnyObject {
     func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?)
 }
+//메모가 없는 경우 아무것도 저장되지 않게하기
+//셀을 길게 눌렀을 때 해당 위치에 얼럿이 뜨게 하기
