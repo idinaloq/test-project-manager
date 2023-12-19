@@ -113,11 +113,16 @@ final class EditViewController: UIViewController {
         }
     }
     
-    @objc private func touchUpDoneButton() {
+    @objc private func touchUpDoneButton() { // 메모가 없는 경우 얼럿으로 표시하기
         if textData.deadline == nil {
             textData.deadline = Date()
         }
-
+        
+        guard textData.title != "", textData.body != "" else {
+            dismiss(animated: true)
+            return
+        }
+        
         delegate?.updateCell(textData: textData, writeMode: writeMode, tableViewTag: tableViewTag, indexPath: indexPath)
         dismiss(animated: true)
     }
@@ -129,7 +134,7 @@ final class EditViewController: UIViewController {
     @objc private func touchUpCancelButton() {
         dismiss(animated: true)
     }
-
+    
     private func configureLayout() {
         NSLayoutConstraint.activate([
             titleTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
@@ -179,15 +184,18 @@ final class EditViewController: UIViewController {
 
 extension EditViewController: UITextFieldDelegate, UITextViewDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        textData.title = textField.text
+        let trimWhiteSpace = textField.text
+        let text = trimWhiteSpace?.trimmingCharacters(in: .whitespaces)
+        textData.title = text
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        textData.body = textView.text
+        let trimWhiteSpace = textView.text
+        let text = trimWhiteSpace?.trimmingCharacters(in: .whitespaces)
+        textData.body = text
     }
 }
 
 protocol EditViewControllerDelegate: AnyObject {
     func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?)
 }
-//메모가 없는 경우 아무것도 저장되지 않게하기
