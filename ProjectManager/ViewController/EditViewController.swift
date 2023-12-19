@@ -191,4 +191,3 @@ protocol EditViewControllerDelegate: AnyObject {
     func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?)
 }
 //메모가 없는 경우 아무것도 저장되지 않게하기
-//셀을 길게 눌렀을 때 해당 위치에 얼럿이 뜨게 하기
