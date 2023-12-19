@@ -14,6 +14,7 @@ final class EditViewController: UIViewController {
     private let writeMode: WriteMode
     private let tableViewTag: Int
     private let indexPath: IndexPath?
+    private var isEditable = false
     var delegate: EditViewControllerDelegate?
     
     private let titleTextField: UITextField = {
@@ -54,6 +55,7 @@ final class EditViewController: UIViewController {
         configureDatePicker()
         configureLayout()
         configureTextData()
+        check(mode: writeMode)
     }
     
     private func configureUI() {
@@ -111,7 +113,7 @@ final class EditViewController: UIViewController {
     }
     
     @objc private func touchUpEditButton() {
-        
+        toggleEditable()
     }
     
     @objc private func touchUpCancelButton() {
@@ -135,6 +137,33 @@ final class EditViewController: UIViewController {
             bodyTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8),
             bodyTextView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8)
         ])
+    }
+    
+    private func toggleEditable() {
+        if isEditable {
+            titleTextField.isEnabled = false
+            bodyTextView.isEditable = false
+            datePicker.isEnabled = false
+            isEditable = false
+        } else {
+            titleTextField.isEnabled = true
+            bodyTextView.isEditable = true
+            datePicker.isEnabled = true
+            isEditable = true
+        }
+    }
+    
+    private func check(mode: WriteMode) {
+        switch mode {
+        case .add:
+            titleTextField.isEnabled = true
+            bodyTextView.isEditable = true
+            datePicker.isEnabled = true
+        case .edit:
+            titleTextField.isEnabled = false
+            bodyTextView.isEditable = false
+            datePicker.isEnabled = false
+        }
     }
 }
 
