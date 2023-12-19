@@ -118,8 +118,12 @@ final class EditViewController: UIViewController {
             textData.deadline = Date()
         }
         
-        guard textData.title != "", textData.body != "" else {
-            dismiss(animated: true)
+        guard textData.title != "", textData.body != "", textData.title != nil, textData.body != nil else {
+            let alertController: UIAlertController = UIAlertController(title: "에러", message: "내용을 입력해 주세요.", preferredStyle: .alert)
+            let cancel: UIAlertAction = UIAlertAction(title: "닫기", style: .cancel)
+            alertController.addAction(cancel)
+            present(alertController, animated: true)
+            
             return
         }
         
