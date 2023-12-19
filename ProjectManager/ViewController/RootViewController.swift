@@ -351,7 +351,6 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         present(alertController, animated: true)
-        
     }
 }
 
