@@ -344,10 +344,14 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
             print("alertController error")
         }
         
-        if let popOverController = alertController.popoverPresentationController {
-            popOverController.sourceView = view
-            popOverController.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.maxY, width: 0, height: 0)
-            popOverController.permittedArrowDirections = []
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = cell
+//            popoverController.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.maxY, width: 0, height: 0)
+            let location = gestureRecognizer.location(in: cell)
+            let rect = CGRect(origin: location, size: .zero)
+            popoverController.sourceRect = rect
+            popoverController.permittedArrowDirections = []
+            
         }
         
         present(alertController, animated: true)
