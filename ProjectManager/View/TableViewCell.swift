@@ -93,7 +93,7 @@ final class TableViewCell: UITableViewCell {
         ])
     }
     
-    func configureLabel(textData: TextData) {
+    func configureLabel(textData: TextDataModel) {
         guard let deadline = textData.deadline else {
             return
         }
