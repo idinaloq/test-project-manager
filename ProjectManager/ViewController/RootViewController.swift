@@ -7,10 +7,11 @@
 
 import UIKit
 
-class RootViewController: UIViewController {
-    private var todoData: [TextData] = []
-    private var doingData: [TextData] = []
-    private var doneData: [TextData] = []
+final class RootViewController: UIViewController {
+    private var todoData: [TextDataModel] = []
+    private var doingData: [TextDataModel] = []
+    private var doneData: [TextDataModel] = []
+    private let cellModelView: CellViewModel = CellViewModel()
     
     private let todoTitleView: UIView = {
         let titleView: TitleView = TitleView()
@@ -74,13 +75,13 @@ class RootViewController: UIViewController {
     }
     
     private func configureNatigation() {
-        let plusBotton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .done, target: self, action: #selector(touchUpPlusButton))
-        navigationItem.rightBarButtonItem = plusBotton
+        let plusButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .done, target: self, action: #selector(touchUpPlusButton))
+        navigationItem.rightBarButtonItem = plusButton
         navigationItem.title = "Project Manager"
     }
     
     @objc private func touchUpPlusButton() {
-        let editViewController: EditViewController = EditViewController(textData: TextData(), writeMode: .add, tableViewTag: TableViewTag.todo.tag, indexPath: nil)
+        let editViewController: EditViewController = EditViewController(textData: TextDataModel(), writeMode: .new, tableViewTag: TableViewTag.todo.tag, indexPath: nil)
         editViewController.modalPresentationStyle = .formSheet
         editViewController.delegate = self
         let navigationController: UINavigationController = UINavigationController(rootViewController: editViewController)
@@ -140,6 +141,10 @@ class RootViewController: UIViewController {
 
 extension RootViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return getNumberOfSection(tableView)
+    }
+    
+    func getNumberOfSection(_ tableView: UITableView) -> Int {
         switch tableView.tag {
         case TableViewTag.todo.tag:
             return todoData.count
@@ -156,56 +161,9 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         return createCell(tableView: tableView, indexPath: indexPath)
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var textData: TextData?
-        switch tableView.tag {
-        case TableViewTag.todo.tag:
-            textData = todoData[safe: indexPath.row]
-        case TableViewTag.doing.tag:
-            textData = doingData[safe: indexPath.row]
-        case TableViewTag.done.tag:
-            textData = doneData[safe: indexPath.row]
-        default:
-            print("textData error")
-            return
-        }
-        
-        guard let textData = textData else {
-            return
-        }
-        
-        let editViewController: EditViewController = EditViewController(textData: textData, writeMode: .edit, tableViewTag: tableView.tag, indexPath: indexPath)
-        editViewController.modalPresentationStyle = .formSheet
-        editViewController.delegate = self
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        let navigationController: UINavigationController = UINavigationController(rootViewController: editViewController)
-        present(navigationController, animated: true)
-    }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete", handler: { [weak self] (action, view, completionHandler) in
-            switch tableView.tag {
-            case TableViewTag.todo.tag:
-                self?.todoData.remove(at: indexPath.row)
-                self?.todoTableView.deleteRows(at: [indexPath], with: .automatic)
-            case TableViewTag.doing.tag:
-                self?.doingData.remove(at: indexPath.row)
-                self?.doingTableView.deleteRows(at: [indexPath], with: .automatic)
-            case TableViewTag.done.tag:
-                self?.doneData.remove(at: indexPath.row)
-                self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
-            default:
-                print("swipe error")
-            }
-            
-        })
-        return UISwipeActionsConfiguration(actions: [deleteAction])
-    }
-    
     func createCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         var identifier: String
-        var data: TextData?
+        var data: TextDataModel?
         
         switch tableView.tag {
         case TableViewTag.todo.tag:
@@ -346,7 +304,6 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         
         if let popoverController = alertController.popoverPresentationController {
             popoverController.sourceView = cell
-//            popoverController.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.maxY, width: 0, height: 0)
             let location = gestureRecognizer.location(in: cell)
             let rect = CGRect(origin: location, size: .zero)
             popoverController.sourceRect = rect
@@ -356,13 +313,64 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         
         present(alertController, animated: true)
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var textData: TextDataModel?
+        switch tableView.tag {
+        case TableViewTag.todo.tag:
+            textData = todoData[safe: indexPath.row]
+        case TableViewTag.doing.tag:
+            textData = doingData[safe: indexPath.row]
+        case TableViewTag.done.tag:
+            textData = doneData[safe: indexPath.row]
+        default:
+            print("textData error")
+            return
+        }
+        
+        guard let textData = textData else {
+            return
+        }
+        
+        let editViewController: EditViewController = EditViewController(textData: textData, writeMode: .edit, tableViewTag: tableView.tag, indexPath: indexPath)
+        editViewController.modalPresentationStyle = .formSheet
+        editViewController.delegate = self
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let navigationController: UINavigationController = UINavigationController(rootViewController: editViewController)
+        present(navigationController, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete", handler: { [weak self] (action, view, completionHandler) in
+            switch tableView.tag {
+            case TableViewTag.todo.tag:
+                self?.todoData.remove(at: indexPath.row)
+                self?.todoTableView.deleteRows(at: [indexPath], with: .automatic)
+            case TableViewTag.doing.tag:
+                self?.doingData.remove(at: indexPath.row)
+                self?.doingTableView.deleteRows(at: [indexPath], with: .automatic)
+            case TableViewTag.done.tag:
+                self?.doneData.remove(at: indexPath.row)
+                self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
+            default:
+                print("swipe error")
+            }
+            
+        })
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+    
+
+    
+
 }
 
 extension RootViewController: EditViewControllerDelegate {
-    func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?) {
+    func updateCell(textData: TextDataModel, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?) {
         
         switch writeMode {
-        case .add:
+        case .new:
             let todoIndexPath: IndexPath = IndexPath(row: todoData.count, section: 0)
             todoData.append(textData)
             todoTableView.insertRows(at: [todoIndexPath], with: .automatic)
