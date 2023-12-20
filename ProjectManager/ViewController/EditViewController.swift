@@ -10,7 +10,7 @@ import UIKit
 
 final class EditViewController: UIViewController {
     private let datePicker: UIDatePicker = UIDatePicker()
-    private var textData: TextData
+    private var textData: TextDataModel
     private let writeMode: WriteMode
     private let tableViewTag: Int
     private let indexPath: IndexPath?
@@ -36,7 +36,7 @@ final class EditViewController: UIViewController {
         return textView
     }()
     
-    init(textData: TextData, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?) {
+    init(textData: TextDataModel, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?) {
         self.textData = textData
         self.writeMode = writeMode
         self.tableViewTag = tableViewTag
@@ -107,13 +107,13 @@ final class EditViewController: UIViewController {
         case .edit:
             let cancelButton: UIBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(touchUpEditButton))
             navigationItem.leftBarButtonItem = cancelButton
-        case .add:
+        case .new:
             let addButton: UIBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(touchUpCancelButton))
             navigationItem.leftBarButtonItem = addButton
         }
     }
     
-    @objc private func touchUpDoneButton() { // 메모가 없는 경우 얼럿으로 표시하기
+    @objc private func touchUpDoneButton() {
         if textData.deadline == nil {
             textData.deadline = Date()
         }
@@ -174,7 +174,7 @@ final class EditViewController: UIViewController {
     
     private func check(mode: WriteMode) {
         switch mode {
-        case .add:
+        case .new:
             titleTextField.isEnabled = true
             bodyTextView.isEditable = true
             datePicker.isEnabled = true
@@ -201,5 +201,5 @@ extension EditViewController: UITextFieldDelegate, UITextViewDelegate {
 }
 
 protocol EditViewControllerDelegate: AnyObject {
-    func updateCell(textData: TextData, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?)
+    func updateCell(textData: TextDataModel, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?)
 }
