@@ -6,6 +6,5 @@
 //
 
 enum WriteMode {
-    case edit
-    case add
+    case edit, new
 }
