@@ -6,9 +6,7 @@
 //
 
 enum TableViewTag: CustomStringConvertible {
-    case todo
-    case doing
-    case done
+    case todo, doing, done
     
     var tag: Int {
         switch self {
