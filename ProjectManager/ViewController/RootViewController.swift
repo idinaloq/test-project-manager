@@ -8,10 +8,7 @@
 import UIKit
 
 final class RootViewController: UIViewController {
-    private var todoData: [TextDataModel] = []
-    private var doingData: [TextDataModel] = []
-    private var doneData: [TextDataModel] = []
-    private let cellModelView: CellViewModel = CellViewModel()
+    private let cellViewModel: CellViewModel = CellViewModel()
     
     private let todoTitleView: UIView = {
         let titleView: TitleView = TitleView()
@@ -69,6 +66,7 @@ final class RootViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         configureNatigation()
         configureUI()
         configureLayout()
@@ -81,7 +79,7 @@ final class RootViewController: UIViewController {
     }
     
     @objc private func touchUpPlusButton() {
-        let editViewController: EditViewController = EditViewController(textData: TextDataModel(), writeMode: .new, tableViewTag: TableViewTag.todo.tag, indexPath: nil)
+        let editViewController: EditViewController = EditViewController(data: TextDataModel(), writeMode: .new, tableView: todoTableView, indexPath: nil)
         editViewController.modalPresentationStyle = .formSheet
         editViewController.delegate = self
         let navigationController: UINavigationController = UINavigationController(rootViewController: editViewController)
@@ -141,43 +139,32 @@ final class RootViewController: UIViewController {
 
 extension RootViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return getNumberOfSection(tableView)
-    }
-    
-    func getNumberOfSection(_ tableView: UITableView) -> Int {
-        switch tableView.tag {
-        case TableViewTag.todo.tag:
-            return todoData.count
-        case TableViewTag.doing.tag:
-            return doingData.count
-        case TableViewTag.done.tag:
-            return doneData.count
-        default:
-            return 0
-        }
+        
+        return cellViewModel.getNumberOfData(in: tableView)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return createCell(tableView: tableView, indexPath: indexPath)
+        
+        return createCell(for: tableView, at: indexPath)
     }
     
-    func createCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+    func createCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         var identifier: String
         var data: TextDataModel?
+        let index = indexPath.row
         
         switch tableView.tag {
         case TableViewTag.todo.tag:
             identifier = TableViewTag.todo.description
-            data = todoData[safe: indexPath.item]
         case TableViewTag.doing.tag:
             identifier = TableViewTag.doing.description
-            data = doingData[safe: indexPath.item]
         case TableViewTag.done.tag:
             identifier = TableViewTag.done.description
-            data = doneData[safe: indexPath.item]
         default:
             return TableViewCell()
         }
+        
+        data = cellViewModel.getTextData(for: tableView, at: index)
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? TableViewCell,
               let data = data else {
@@ -201,29 +188,29 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         let moveToToDo: UIAlertAction = UIAlertAction(title: "move to todo", style: .default) { [weak self] _ in
             if tableView.tag == TableViewTag.doing.tag { // doing -> todo
                 guard let indexPath = self?.doingTableView.indexPath(for: cell),
-                      let doingData = self?.doingData[safe: indexPath.row],
-                      let todoDataCount = self?.todoData.count else {
+                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
+                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .todo) else {
                     return
                 }
                 
-                self?.todoData.append(doingData)
-                self?.doingData.remove(at: indexPath.row)
+                self?.cellViewModel.appendData(data: data, tag: .todo)
+                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
                 self?.doingTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: todoDataCount, section: 0)
+                let index = IndexPath(row: numberOfData, section: 0)
                 self?.todoTableView.insertRows(at: [index], with: .automatic)
             }
             
             if tableView.tag == TableViewTag.done.tag { // done -> todo
                 guard let indexPath = self?.doneTableView.indexPath(for: cell),
-                      let doneData = self?.doneData[safe: indexPath.row],
-                      let todoDataCount = self?.todoData.count else {
+                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
+                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .todo) else {
                     return
                 }
                 
-                self?.todoData.append(doneData)
-                self?.doneData.remove(at: indexPath.row)
+                self?.cellViewModel.appendData(data: data, tag: .todo)
+                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
                 self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: todoDataCount, section: 0)
+                let index = IndexPath(row: numberOfData, section: 0)
                 self?.todoTableView.insertRows(at: [index], with: .automatic)
             }
         }
@@ -231,29 +218,29 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         let moveToDoing: UIAlertAction = UIAlertAction(title: "move to doing", style: .default) { [weak self] _ in
             if tableView.tag == TableViewTag.todo.tag { // todo -> doing
                 guard let indexPath = self?.todoTableView.indexPath(for: cell),
-                      let todoData = self?.todoData[safe: indexPath.row],
-                      let doingDataCount = self?.doingData.count else {
+                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
+                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .doing) else {
                     return
                 }
                 
-                self?.doingData.append(todoData)
-                self?.todoData.remove(at: indexPath.row)
+                self?.cellViewModel.appendData(data: data, tag: .doing)
+                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
                 self?.todoTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: doingDataCount, section: 0)
+                let index = IndexPath(row: numberOfData, section: 0)
                 self?.doingTableView.insertRows(at: [index], with: .automatic)
             }
             
             if tableView.tag == TableViewTag.done.tag { // done -> doing
                 guard let indexPath = self?.doneTableView.indexPath(for: cell),
-                      let doneData = self?.doneData[safe: indexPath.row],
-                      let doingDataCount = self?.doingData.count else {
+                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
+                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .doing) else {
                     return
                 }
                 
-                self?.doingData.append(doneData)
-                self?.doneData.remove(at: indexPath.row)
+                self?.cellViewModel.appendData(data: data, tag: .doing)
+                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
                 self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: doingDataCount, section: 0)
+                let index = IndexPath(row: numberOfData, section: 0)
                 self?.doingTableView.insertRows(at: [index], with: .automatic)
             }
         }
@@ -261,29 +248,29 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         let moveToDone: UIAlertAction = UIAlertAction(title: "move to done", style: .default) { [weak self] _ in
             if tableView.tag == TableViewTag.todo.tag { // todo -> done
                 guard let indexPath = self?.todoTableView.indexPath(for: cell),
-                      let todoData = self?.todoData[safe: indexPath.row],
-                      let doneDataCount = self?.doneData.count else {
+                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
+                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .done) else {
                     return
                 }
                 
-                self?.doneData.append(todoData)
-                self?.todoData.remove(at: indexPath.row)
+                self?.cellViewModel.appendData(data: data, tag: .done)
+                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
                 self?.todoTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: doneDataCount, section: 0)
+                let index = IndexPath(row: numberOfData, section: 0)
                 self?.doneTableView.insertRows(at: [index], with: .automatic)
             }
             
             if tableView.tag == TableViewTag.doing.tag { // doing -> done
                 guard let indexPath = self?.doingTableView.indexPath(for: cell),
-                      let doingData = self?.doingData[safe: indexPath.row],
-                      let doneDataCount = self?.doneData.count else {
+                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
+                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .done) else {
                     return
                 }
                 
-                self?.doneData.append(doingData)
-                self?.doingData.remove(at: indexPath.row)
+                self?.cellViewModel.appendData(data: data, tag: .done)
+                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
                 self?.doingTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: doneDataCount, section: 0)
+                let index = IndexPath(row: numberOfData, section: 0)
                 self?.doneTableView.insertRows(at: [index], with: .automatic)
             }
         }
@@ -314,44 +301,37 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         present(alertController, animated: true)
     }
     
+    
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var textData: TextDataModel?
-        switch tableView.tag {
-        case TableViewTag.todo.tag:
-            textData = todoData[safe: indexPath.row]
-        case TableViewTag.doing.tag:
-            textData = doingData[safe: indexPath.row]
-        case TableViewTag.done.tag:
-            textData = doneData[safe: indexPath.row]
-        default:
-            print("textData error")
+        guard let data = cellViewModel.getTextData(for: tableView, at: indexPath.row) else {
             return
         }
         
-        guard let textData = textData else {
-            return
-        }
-        
-        let editViewController: EditViewController = EditViewController(textData: textData, writeMode: .edit, tableViewTag: tableView.tag, indexPath: indexPath)
-        editViewController.modalPresentationStyle = .formSheet
-        editViewController.delegate = self
-        tableView.deselectRow(at: indexPath, animated: true)
+        let editViewController: EditViewController = {
+            let viewController = EditViewController(data: data, writeMode: .edit, tableView: tableView, indexPath: indexPath)
+            viewController.modalPresentationStyle = .formSheet
+            viewController.delegate = self
+            
+            return viewController
+        }()
         
         let navigationController: UINavigationController = UINavigationController(rootViewController: editViewController)
+        tableView.deselectRow(at: indexPath, animated: true)
         present(navigationController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete", handler: { [weak self] (action, view, completionHandler) in
+            
+            self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
+            
             switch tableView.tag {
             case TableViewTag.todo.tag:
-                self?.todoData.remove(at: indexPath.row)
                 self?.todoTableView.deleteRows(at: [indexPath], with: .automatic)
             case TableViewTag.doing.tag:
-                self?.doingData.remove(at: indexPath.row)
                 self?.doingTableView.deleteRows(at: [indexPath], with: .automatic)
             case TableViewTag.done.tag:
-                self?.doneData.remove(at: indexPath.row)
                 self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
             default:
                 print("swipe error")
@@ -360,34 +340,28 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         })
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
-    
-
-    
-
 }
 
 extension RootViewController: EditViewControllerDelegate {
-    func updateCell(textData: TextDataModel, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?) {
+    func updateCell(data: TextDataModel, writeMode: WriteMode, tableView: UITableView, indexPath: IndexPath?) {
         
         switch writeMode {
         case .new:
-            let todoIndexPath: IndexPath = IndexPath(row: todoData.count, section: 0)
-            todoData.append(textData)
+            let todoIndexPath: IndexPath = IndexPath(row: cellViewModel.getNumberOfData(in: tableView), section: 0)
+            cellViewModel.appendData(tableView: tableView, data: data)
             todoTableView.insertRows(at: [todoIndexPath], with: .automatic)
         case .edit:
             guard let indexPath = indexPath else {
                 return
             }
             
-            switch tableViewTag {
+            cellViewModel.changeData(tableView: tableView, index: indexPath.row, data: data)
+            switch tableView.tag {
             case TableViewTag.todo.tag:
-                todoData[indexPath.row] = textData
                 todoTableView.reloadRows(at: [indexPath], with: .automatic)
             case TableViewTag.doing.tag:
-                doingData[indexPath.row] = textData
                 doingTableView.reloadRows(at: [indexPath], with: .automatic)
             case TableViewTag.done.tag:
-                doneData[indexPath.row] = textData
                 doneTableView.reloadRows(at: [indexPath], with: .automatic)
             default:
                 print("delegate tag error")

@@ -10,9 +10,9 @@ import UIKit
 
 final class EditViewController: UIViewController {
     private let datePicker: UIDatePicker = UIDatePicker()
-    private var textData: TextDataModel
+    private var data: TextDataModel
     private let writeMode: WriteMode
-    private let tableViewTag: Int
+    private let tableView: UITableView
     private let indexPath: IndexPath?
     private var isEditable = false
     var delegate: EditViewControllerDelegate?
@@ -36,10 +36,10 @@ final class EditViewController: UIViewController {
         return textView
     }()
     
-    init(textData: TextDataModel, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?) {
-        self.textData = textData
+    init(data: TextDataModel, writeMode: WriteMode, tableView: UITableView, indexPath: IndexPath?) {
+        self.data = data
         self.writeMode = writeMode
-        self.tableViewTag = tableViewTag
+        self.tableView = tableView
         self.indexPath = indexPath
         super.init(nibName: nil, bundle: nil)
     }
@@ -68,9 +68,9 @@ final class EditViewController: UIViewController {
     }
     
     private func configureTextData() {
-        titleTextField.text = textData.title
-        bodyTextView.text = textData.body
-        guard let date = textData.deadline else {
+        titleTextField.text = data.title
+        bodyTextView.text = data.body
+        guard let date = data.deadline else {
             return
         }
         datePicker.date = date
@@ -86,13 +86,13 @@ final class EditViewController: UIViewController {
     }
     
     @objc private func selectDatePicker() {
-        textData.deadline = datePicker.date
+        data.deadline = datePicker.date
     }
     
     private func configureNavigation() {
         let doneButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(touchUpDoneButton))
         navigationItem.rightBarButtonItem = doneButton
-        switch tableViewTag {
+        switch tableView.tag {
         case TableViewTag.todo.tag:
             navigationItem.title = "TODO"
         case TableViewTag.doing.tag:
@@ -114,11 +114,11 @@ final class EditViewController: UIViewController {
     }
     
     @objc private func touchUpDoneButton() {
-        if textData.deadline == nil {
-            textData.deadline = Date()
+        if data.deadline == nil {
+            data.deadline = Date()
         }
         
-        guard textData.title != "", textData.body != "", textData.title != nil, textData.body != nil else {
+        guard data.title != "", data.body != "", data.title != nil, data.body != nil else {
             let alertController: UIAlertController = UIAlertController(title: "에러", message: "내용을 입력해 주세요.", preferredStyle: .alert)
             let cancel: UIAlertAction = UIAlertAction(title: "닫기", style: .cancel)
             alertController.addAction(cancel)
@@ -127,7 +127,7 @@ final class EditViewController: UIViewController {
             return
         }
         
-        delegate?.updateCell(textData: textData, writeMode: writeMode, tableViewTag: tableViewTag, indexPath: indexPath)
+        delegate?.updateCell(data: data, writeMode: writeMode, tableView: tableView, indexPath: indexPath)
         dismiss(animated: true)
     }
     
@@ -190,16 +190,16 @@ extension EditViewController: UITextFieldDelegate, UITextViewDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         let trimWhiteSpace = textField.text
         let text = trimWhiteSpace?.trimmingCharacters(in: .whitespaces)
-        textData.title = text
+        data.title = text
     }
     
     func textViewDidChange(_ textView: UITextView) {
         let trimWhiteSpace = textView.text
         let text = trimWhiteSpace?.trimmingCharacters(in: .whitespaces)
-        textData.body = text
+        data.body = text
     }
 }
 
 protocol EditViewControllerDelegate: AnyObject {
-    func updateCell(textData: TextDataModel, writeMode: WriteMode, tableViewTag: Int, indexPath: IndexPath?)
+    func updateCell(data: TextDataModel, writeMode: WriteMode, tableView: UITableView, indexPath: IndexPath?)
 }
