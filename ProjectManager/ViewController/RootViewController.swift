@@ -186,93 +186,68 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         
         let alertController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let moveToToDo: UIAlertAction = UIAlertAction(title: "move to todo", style: .default) { [weak self] _ in
-            if tableView.tag == TableViewTag.doing.tag { // doing -> todo
-                guard let indexPath = self?.doingTableView.indexPath(for: cell),
-                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
-                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .todo) else {
-                    return
-                }
-                
-                self?.cellViewModel.appendData(data: data, tag: .todo)
-                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
+            
+            guard let indexPath = tableView.indexPath(for: cell),
+                  let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
+                  let numberOfData = self?.cellViewModel.getNumberOfData(tag: .todo) else { return }
+            
+            let index = IndexPath(row: numberOfData, section: 0)
+            self?.cellViewModel.appendData(data: data, tag: .todo)
+            self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
+            
+            switch tableView.tag {
+            case TableViewTag.doing.tag:
                 self?.doingTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: numberOfData, section: 0)
-                self?.todoTableView.insertRows(at: [index], with: .automatic)
+            case TableViewTag.done.tag:
+                self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
+            default:
+                return
             }
             
-            if tableView.tag == TableViewTag.done.tag { // done -> todo
-                guard let indexPath = self?.doneTableView.indexPath(for: cell),
-                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
-                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .todo) else {
-                    return
-                }
-                
-                self?.cellViewModel.appendData(data: data, tag: .todo)
-                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
-                self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: numberOfData, section: 0)
-                self?.todoTableView.insertRows(at: [index], with: .automatic)
-            }
+            self?.todoTableView.insertRows(at: [index], with: .automatic)
         }
         
         let moveToDoing: UIAlertAction = UIAlertAction(title: "move to doing", style: .default) { [weak self] _ in
-            if tableView.tag == TableViewTag.todo.tag { // todo -> doing
-                guard let indexPath = self?.todoTableView.indexPath(for: cell),
-                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
-                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .doing) else {
-                    return
-                }
-                
-                self?.cellViewModel.appendData(data: data, tag: .doing)
-                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
+            
+            guard let indexPath = tableView.indexPath(for: cell),
+                  let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
+                  let numberOfData = self?.cellViewModel.getNumberOfData(tag: .doing) else { return }
+            
+            let index = IndexPath(row: numberOfData, section: 0)
+            self?.cellViewModel.appendData(data: data, tag: .doing)
+            self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
+            
+            switch tableView.tag {
+            case TableViewTag.todo.tag:
                 self?.todoTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: numberOfData, section: 0)
-                self?.doingTableView.insertRows(at: [index], with: .automatic)
+            case TableViewTag.done.tag:
+                self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
+            default:
+                return
             }
             
-            if tableView.tag == TableViewTag.done.tag { // done -> doing
-                guard let indexPath = self?.doneTableView.indexPath(for: cell),
-                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
-                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .doing) else {
-                    return
-                }
-                
-                self?.cellViewModel.appendData(data: data, tag: .doing)
-                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
-                self?.doneTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: numberOfData, section: 0)
-                self?.doingTableView.insertRows(at: [index], with: .automatic)
-            }
+            self?.doingTableView.insertRows(at: [index], with: .automatic)
         }
         
         let moveToDone: UIAlertAction = UIAlertAction(title: "move to done", style: .default) { [weak self] _ in
-            if tableView.tag == TableViewTag.todo.tag { // todo -> done
-                guard let indexPath = self?.todoTableView.indexPath(for: cell),
-                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
-                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .done) else {
-                    return
-                }
-                
-                self?.cellViewModel.appendData(data: data, tag: .done)
-                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
+            guard let indexPath = tableView.indexPath(for: cell),
+                  let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
+                  let numberOfData = self?.cellViewModel.getNumberOfData(tag: .done) else { return }
+            
+            let index = IndexPath(row: numberOfData, section: 0)
+            self?.cellViewModel.appendData(data: data, tag: .done)
+            self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
+            
+            switch tableView.tag {
+            case TableViewTag.todo.tag:
                 self?.todoTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: numberOfData, section: 0)
-                self?.doneTableView.insertRows(at: [index], with: .automatic)
+            case TableViewTag.doing.tag:
+                self?.doingTableView.deleteRows(at: [indexPath], with: .automatic)
+            default:
+                return
             }
             
-            if tableView.tag == TableViewTag.doing.tag { // doing -> done
-                guard let indexPath = self?.doingTableView.indexPath(for: cell),
-                      let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
-                      let numberOfData = self?.cellViewModel.getNumberOfData(tag: .done) else {
-                    return
-                }
-                
-                self?.cellViewModel.appendData(data: data, tag: .done)
-                self?.cellViewModel.removeData(tableView: tableView, index: indexPath.row)
-                self?.doingTableView.deleteRows(at: [indexPath], with: .automatic)
-                let index = IndexPath(row: numberOfData, section: 0)
-                self?.doneTableView.insertRows(at: [index], with: .automatic)
-            }
+            self?.doneTableView.insertRows(at: [index], with: .automatic)
         }
         
         switch tableView.tag {
@@ -300,8 +275,6 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         
         present(alertController, animated: true)
     }
-    
-    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let data = cellViewModel.getTextData(for: tableView, at: indexPath.row) else {
