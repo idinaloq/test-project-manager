@@ -6,8 +6,7 @@
 //
 
 import UIKit
-//셀의 기능은 셀에,
-//datamodel 추가,제거는 textdateviewmodel에
+
 class CellViewModel {
     private var textDataViewModel: TextDataViewModel = TextDataViewModel()
     

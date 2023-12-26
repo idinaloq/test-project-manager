@@ -5,7 +5,6 @@
 //  Created by idinaloq on 2023/12/06.
 //
 
-//새로 할 일 작성, 기존 할 일 수정 모두 호환되어야 함
 import UIKit
 
 final class EditViewController: UIViewController {

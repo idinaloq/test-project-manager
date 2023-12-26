@@ -168,6 +168,7 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? TableViewCell,
               let data = data else {
+            
             return TableViewCell()
         }
         
@@ -180,13 +181,10 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
     
     @objc private func longTappedCell(_ gestureRecognizer: UILongPressGestureRecognizer) {
         guard let cell = gestureRecognizer.view as? UITableViewCell,
-              let tableView = cell.superview as? UITableView else {
-            return
-        }
+              let tableView = cell.superview as? UITableView else { return }
         
         let alertController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let moveToToDo: UIAlertAction = UIAlertAction(title: "move to todo", style: .default) { [weak self] _ in
-            
             guard let indexPath = tableView.indexPath(for: cell),
                   let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
                   let numberOfData = self?.cellViewModel.getNumberOfData(tag: .todo) else { return }
@@ -208,7 +206,6 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         let moveToDoing: UIAlertAction = UIAlertAction(title: "move to doing", style: .default) { [weak self] _ in
-            
             guard let indexPath = tableView.indexPath(for: cell),
                   let data = self?.cellViewModel.getTextData(for: tableView, at: indexPath.row),
                   let numberOfData = self?.cellViewModel.getNumberOfData(tag: .doing) else { return }
@@ -263,23 +260,19 @@ extension RootViewController: UITableViewDataSource, UITableViewDelegate {
         default:
             print("alertController error")
         }
+
+        guard let popoverController = alertController.popoverPresentationController else { return }
         
-        if let popoverController = alertController.popoverPresentationController {
-            popoverController.sourceView = cell
-            let location = gestureRecognizer.location(in: cell)
-            let rect = CGRect(origin: location, size: .zero)
-            popoverController.sourceRect = rect
-            popoverController.permittedArrowDirections = []
-            
-        }
-        
+        popoverController.sourceView = cell
+        let location = gestureRecognizer.location(in: cell)
+        let rect = CGRect(origin: location, size: .zero)
+        popoverController.sourceRect = rect
+        popoverController.permittedArrowDirections = []
         present(alertController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let data = cellViewModel.getTextData(for: tableView, at: indexPath.row) else {
-            return
-        }
+        guard let data = cellViewModel.getTextData(for: tableView, at: indexPath.row) else { return }
         
         let editViewController: EditViewController = {
             let viewController = EditViewController(data: data, writeMode: .edit, tableView: tableView, indexPath: indexPath)
@@ -324,11 +317,9 @@ extension RootViewController: EditViewControllerDelegate {
             cellViewModel.appendData(tableView: tableView, data: data)
             todoTableView.insertRows(at: [todoIndexPath], with: .automatic)
         case .edit:
-            guard let indexPath = indexPath else {
-                return
-            }
-            
+            guard let indexPath = indexPath else { return }
             cellViewModel.changeData(tableView: tableView, index: indexPath.row, data: data)
+            
             switch tableView.tag {
             case TableViewTag.todo.tag:
                 todoTableView.reloadRows(at: [indexPath], with: .automatic)
