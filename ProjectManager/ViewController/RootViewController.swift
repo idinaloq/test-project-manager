@@ -4,6 +4,10 @@
 //
 //  Created by idinaloq on 2023/12/04.
 //
+// 해야 될 작업
+// TODO, DOING, DONE 제목 옆에 메모 갯수 표시하기
+// 각각 TableView마다 구분선 표시하기
+// 아이클라우드 연동
 
 import UIKit
 
